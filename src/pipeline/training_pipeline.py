@@ -9,12 +9,13 @@ from src.components.data_ingestion import DataIngestion
 from src.components.data_transformation import DataTransformation
 from src.components.model_training import ModelTrainer
 from src.components.model_evaluation import ModelEvaluation
+from src.components.model_pusher import ModelPusher
 
 from src.entity.artifact_entity import (DataIngestionArtifact, DataTransformationArtifact, 
-                                        ModelTrainingArtifact, ModelEvalArtifact)
+                                        ModelTrainingArtifact, ModelEvalArtifact, ModelPusherArtifact)
 
 from src.entity.config_entity import (DataIngestionConfig, DataTransformationConfig,
-                                      ModelTrainingConfig, ModelEvalConfig)
+                                      ModelTrainingConfig, ModelEvalConfig, ModelPusherConfig)
 
 
 class TrainPipeline:
@@ -23,6 +24,7 @@ class TrainPipeline:
         self.data_transformation_config = DataTransformationConfig()
         self.model_training_config = ModelTrainingConfig()
         self.model_eval_config = ModelEvalConfig()
+        self.model_pusher_config = ModelPusherConfig()
 
 
     def start_data_ingestion(self) -> DataIngestionArtifact:
@@ -115,7 +117,21 @@ class TrainPipeline:
         except Exception as e:
             raise CustomException(e, sys)
 
+    
+    def start_model_pusher(self) -> ModelPusherArtifact:
+        logging.info('Entered the start_model_pusher method of TrainPipeline class')
 
+        try:
+            model_pusher = ModelPusher(model_pusher_config=self.model_pusher_config)
+
+            model_pusher_artifact = model_pusher.initiate_model_pusher()
+
+            logging.info('Exited the start_model_pusher method of TrainPipeline class') 
+
+            return model_pusher_artifact
+
+        except Exception as e:
+            raise CustomException(e, sys)   
 
 
     def run_pipeline(self)->None:

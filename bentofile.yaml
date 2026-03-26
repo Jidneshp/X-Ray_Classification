@@ -1,0 +1,16 @@
+service: 'src.model_arch.model_service.py'
+labels:
+    owner: Jidnesh
+    stage: dev
+include:
+    - 'src.model_arch.model_service.py'
+    - 'src.constant.training_pipeline.__init__.py'
+python:
+    packages:
+        - torch
+        - torchvision
+        - Pillow
+        - numpy
+    extra_index_url:
+        - 'https://download.pytorch.org/whl/cpu'
+
